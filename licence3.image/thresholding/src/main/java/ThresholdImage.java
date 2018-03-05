@@ -38,12 +38,29 @@ public class ThresholdImage<T extends RealType<T>> implements Command {
 		// Completez ce code en utilisant les deux curseurs, un pour lire les
 		// intensites et l'autre pour creer l'image binaire
 
+		long[] pos = new long[dimensions.length];
+
 		// 1. Parcourir toutes les lignes de l'image
-		// 2. Parcourir toutes les colonnes de l'image
-		// 3. affecter la position aux curseurs
-		// 4. obtenir intensite de l'image a la position p
-		// 5. affecter pixel de l'image de sortie
-
+		for (int i = 0 ; i < dimensions[0] ; i++) {
+			pos[0] = i;
+			
+			// 2. Parcourir toutes les colonnes de l'image
+			for (int j = 0 ; j < dimensions[1] ; j++) {
+				pos[1] = j;
+				
+				// 3. Affecter la position aux curseurs
+				cursorIn.setPosition(pos);
+				cursorOut.setPosition(pos);
+				
+				// 4. Obtenir les intensités de l'image à la position p
+				T intensity = cursorIn.get();
+				
+				// 5. Affecter pixel de l'image de sortie
+				if (intensity.getRealDouble() > threshold)
+					cursorOut.get().set(255);
+				else
+					cursorOut.get().set(0);
+			}
+		}
 	}
-
 }
