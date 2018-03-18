@@ -49,10 +49,26 @@ public class ProjectImage<T extends RealType<T>> implements Command {
 		long[] posImg = new long[img.numDimensions()];
 		long[] posProj = new long[res.numDimensions()];
 
-		// Completez ce code:
-		// 1. Pour Chaque ligne/colonne
-		// 2. On somme les intensités de toutes les intensités de la colonne/ligne
-		// 3. On affecte la somme au pixel(s) de l'image de resultat
+		
+		// 1. Pour Chaque ligne
+        for (int i = 0; i < img.dimension(horizontal ? 0 : 1); i++) {
+            posImg[horizontal ? 0 : 1] = i;
+            posProj[horizontal ? 0 : 1] = i;
+            // 2. On somme les intensités de toutes les intensités de la colonne
+            int sum = 0;
+            for (int j = 0; j < img.dimension(horizontal ? 1 : 0); j++) {
+                posImg[horizontal ? 1 : 0] = j;
+                imgCursor.setPosition(posImg);
+                sum += imgCursor.get().getRealDouble();
+            }
+
+            // 3. On affecte la somme au pixel(s) de l'image de resultat
+            for (int j = 0; j < projDims[horizontal ? 1 : 0]; j++) {
+                posProj[horizontal ? 1 : 0] = j;
+                projCursor.setPosition(posProj);
+                projCursor.get().set(sum);
+            }
+        }
 
 		proj = ds.create(res);
 	}

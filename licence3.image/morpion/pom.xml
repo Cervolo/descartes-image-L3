@@ -5,6 +5,7 @@
     <artifactId>licence3.image</artifactId>
     <version>0.0.1</version>
   </parent>
+  
   <artifactId>morpion</artifactId>
   
   <repositories>

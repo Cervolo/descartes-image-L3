@@ -68,17 +68,33 @@ public class Crosscorrelation implements Command {
 		long[] positionImage = new long[2];
 
 		// Completez le code
-		double sum = 0;
-		double div = templateSize[0] * templateSize[1];
+        double sum = 0;
+        double div = templateSize[0] * templateSize[1];
+        
+        // 1. pour chaque colonne du template
+        for (long i = 0; i < templateSize[0]; i++) {
+        	
+            // 2. pour chaque ligne du template
+            positionTemplate[0] = i;
+            positionImage[0] = initialPositionImage[0] + i;
+            for (long j = 0; j < templateSize[1]; j++) {
+            	
+                // 3. on multiplie l'intensite de l'image avec l'intensité du template a
+                // la position de l'image donnee par i et j. Cette valeur doit etre
+                // normalize par la taille de l'image (quantite de pixels). Puis on ajoute cette
+                // multiplication a sum.
+                positionTemplate[1] = j;
+                positionImage[1] = initialPositionImage[1] + j;
 
-		// 1. pour chaque colonne du template
+                if (positionImage[0] >= 0 && positionImage[1] >= 0 && positionImage[0] < imgSize[0]
+                        && positionImage[1] < imgSize[1]) {
+                    template.setPosition(positionTemplate);
+                    img.setPosition(positionImage);
 
-		// 2. pour chaque ligne du template
-
-		// 3. on multiplie l'intensite de l'image avec l'intensité du template a la
-		// position de l'image donnee par i et j. Cette valeur doit etre normalisee
-		// par la taille de l'image (quantite de pixels). Puis on ajoute cette
-		// multiplication a la somme.
+                    sum += (template.get().getRealDouble() * img.get().getRealDouble()) / div;
+                }
+            }
+        }
 
 		return sum;
 	}
