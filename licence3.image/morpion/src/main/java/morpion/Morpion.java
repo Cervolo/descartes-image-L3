@@ -13,16 +13,22 @@ import ij.ImagePlus;
 import ij.process.ImageConverter;
 import net.imagej.DatasetService;
 import net.imagej.ImgPlus;
+import net.imagej.display.DefaultImageDisplay;
 import net.imagej.ops.OpService;
 import net.imagej.ops.Ops;
 import net.imagej.ops.Ops.Convert;
 import net.imagej.ops.convert.ConvertImages;
 import net.imglib2.RandomAccess;
 import net.imglib2.histogram.Histogram1d;
+import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
+
+//import net.imglib2.img.display.imagej.ImageJFunctions;
+
 
 @Plugin(type = Command.class, name = "morpion", menuPath = "Plugins>Morpion Analysis")
 public class Morpion<T extends RealType<T>> implements Command {
@@ -41,7 +47,7 @@ public class Morpion<T extends RealType<T>> implements Command {
 	
 	@Parameter(persist = false)
 	//ImagePlus image; // pour grayscale
-	ImgPlus<T> image; // pour threshold
+	ImgPlus<T> imgIn; // pour threshold
 
 	@Parameter(type = ItemIO.OUTPUT)
 	ImgPlus<UnsignedByteType> imgOut;
@@ -50,14 +56,21 @@ public class Morpion<T extends RealType<T>> implements Command {
 	@Override
 	public void run() {
 		
+		// Récupération des dimensions de l'image
+		long[] dims = new long[imgIn.numDimensions()];
+		imgIn.dimensions(dims);
+		
+		
+		//* Traitements préalables sur l'image *//
+		
 		// Pour convertir en niveaux de gris (8 bits)
 		/*ImageConverter imgConv = new ImageConverter(image);
 		imgConv.convertToGray8();  */
-		
 		//Ops.Convert.Uint8(image);
+		//imgOut = (ImgPlus<UnsignedByteType>) os.convert().uint8(image);
 		
 		// Egalisation de l'histogramme
-		imgOut = (ImgPlus<UnsignedByteType>) os.run("equalizeHistogram", image, 256);
+		imgOut = (ImgPlus<UnsignedByteType>) os.run("equalizeHistogram", imgIn, 256);
 		
 		// Pour faire une binarisation "normale"
 		/*int threshold = 127;		
@@ -81,8 +94,13 @@ public class Morpion<T extends RealType<T>> implements Command {
 		//* Détermination de la grille de jeu *//
 		
 		// Projection horizontale
+		Img<IntType> imgProjH = Projection.project(imgOut, false);
+		//ImageJFunctions.show(imgProjH);
 		
 		// Projection verticale
+		Img<IntType> imgProjV = Projection.project(imgOut, true);
+
+		
 	}
 
 }
