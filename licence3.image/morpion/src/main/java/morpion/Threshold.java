@@ -13,9 +13,13 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 public class Threshold<T extends RealType<T>> {
 	
-	private ImgPlus<T> image;
+	private ImgPlus<UnsignedByteType> image;
 	
-	public Threshold(ImgPlus<T> image) {
+/*	public Threshold(ImgPlus<T> image) {
+		this.image = image;
+	}*/
+	
+	public Threshold(ImgPlus<UnsignedByteType> image) {
 		this.image = image;
 	}
 
@@ -33,7 +37,7 @@ public class Threshold<T extends RealType<T>> {
 		imageConv.setName(image.getName() + "_Mask");
 
 		// Two random cursor to visit all pixels in the input and output images.
-		RandomAccess<T> cursorIn = image.randomAccess();
+		RandomAccess<UnsignedByteType> cursorIn = image.randomAccess();
 		RandomAccess<UnsignedByteType> cursorOut = imageConv.randomAccess();
 		
 		// Completez ce code en utilisant les deux curseurs, un pour lire les
@@ -54,7 +58,7 @@ public class Threshold<T extends RealType<T>> {
 				cursorOut.setPosition(pos);
 				
 				// 4. Obtenir l'intensité de l'image à la position p
-				T intensity = cursorIn.get();
+				UnsignedByteType intensity = cursorIn.get();
 				
 				// 5. Affecter pixel de l'image de sortie
 				if (intensity.getRealDouble() > threshold)

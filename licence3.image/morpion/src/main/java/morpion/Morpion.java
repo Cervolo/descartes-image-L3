@@ -72,12 +72,27 @@ public class Morpion<T extends RealType<T>> implements Command {
 		// Egalisation de l'histogramme
 		imgOut = (ImgPlus<UnsignedByteType>) os.run("equalizeHistogram", imgIn, 256);
 		
-		// Pour faire une binarisation "normale"
-		/*int threshold = 127;		
-		Threshold<T> t = new Threshold<>(image);
-		imgOut = t.binarisation(threshold);*/
 		
-		// Binarisation : Otsu
+		
+		//* Détermination de la grille de jeu *//
+		
+		// Horizontalement //
+		ImgPlus<UnsignedByteType> imgProjH = UtilGrid.project(imgOut, false); // projection
+		//ImageJFunctions.show(imgProjH); // TODO : affichage pour controle
+		int thresholdH = UtilGrid.getThreshold(imgProjH); // récupération du seuil de binarisation (3ieme quartile des intensités)
+		Threshold<T> tH = new Threshold<T>(imgProjH);
+		imgProjH = tH.binarisation(thresholdH); // binarisation
+		// TODO : identification des centres des 2 nuages de points
+		
+		// Idem verticalement //
+		ImgPlus<UnsignedByteType> imgProjV = UtilGrid.project(imgOut, true);
+		int thresholdV = UtilGrid.getThreshold(imgProjV);
+		Threshold<T> tV = new Threshold<T>(imgProjV);
+		imgProjV = tV.binarisation(thresholdV);
+		
+
+		
+		// Binarisation de l'image de départ par Otsu
 		Histogram1d<UnsignedByteType> histogram = os.image().histogram(imgOut);
 		UnsignedByteType threshold = os.threshold().otsu(histogram);
 		try {
@@ -90,16 +105,7 @@ public class Morpion<T extends RealType<T>> implements Command {
 			e.printStackTrace();
 		}
 		
-		
-		//* Détermination de la grille de jeu *//
-		
-		// Projection horizontale
-		Img<IntType> imgProjH = Projection.project(imgOut, false);
-		//ImageJFunctions.show(imgProjH);
-		
-		// Projection verticale
-		Img<IntType> imgProjV = Projection.project(imgOut, true);
-
+	
 		
 	}
 
