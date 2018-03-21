@@ -49,6 +49,8 @@ public class UtilGrid<T> {
                 projCursor.get().set(sum);
             }
         }
+        
+        // test test
 			
 		return imgProj;
 	}
