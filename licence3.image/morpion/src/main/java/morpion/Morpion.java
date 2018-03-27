@@ -15,11 +15,12 @@ import net.imagej.Dataset;
 import net.imagej.DatasetService;
 import net.imagej.ImgPlus;
 import net.imagej.ops.OpService;
-import net.imglib2.histogram.Histogram1d;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.histogram.Histogram1d;
 
 //import net.imglib2.img.display.imagej.ImageJFunctions;
 
@@ -44,6 +45,9 @@ public class Morpion<T extends RealType<T>> implements Command {
 
 	@Parameter(type = ItemIO.OUTPUT)
 	ImgPlus<UnsignedByteType> imgOut;
+	//ImgPlus<UnsignedByteType> imgProjH; // pour affichage intermédiare pr debug
+	//Dataset imgProjV; // pour affichage intermédiare pr debug
+	
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -60,10 +64,10 @@ public class Morpion<T extends RealType<T>> implements Command {
 		ImagePlus imgPL = convs.convert(imgIn, ImagePlus.class);
 		ImageConverter converter = new ImageConverter(imgPL);
 		converter.convertToGray8();
-		imgOut = new ImgPlus<UnsignedByteType>(ImagePlusAdapter.wrapByte(imgPL), imgIn.getName());
+		ImgPlus<UnsignedByteType> imgOut = new ImgPlus<UnsignedByteType>(ImagePlusAdapter.wrapByte(imgPL), imgIn.getName());
 		
 		// Egalisation de l'histogramme
-		//imgOut = (ImgPlus<UnsignedByteType>) os.run("equalizeHistogram", imgIn, 256);
+		imgOut = (ImgPlus<UnsignedByteType>) os.run("equalizeHistogram", imgOut, 256); 
 				
 		// Binarisation de l'image de départ par Otsu
 		Histogram1d<UnsignedByteType> histogram = os.image().histogram(imgOut);
@@ -82,23 +86,35 @@ public class Morpion<T extends RealType<T>> implements Command {
 		//* Détermination de la grille de jeu *//
 		
 		// Horizontalement //
-		ImgPlus<UnsignedByteType> imgProjH = UtilGrid.project(imgOut, false); // projection mais ne se fait pas correctement (pb de type ?)
-		ImageJFunctions.show(imgProjH); // affichage pour debug
-		int thresholdH = UtilGrid.getThreshold(imgProjH); // récupération du seuil de binarisation (3ieme quartile des intensités)
-		// TODO : inverser les pixels
-		Threshold<T> tH = new Threshold<T>(imgProjH);
-		imgProjH = tH.binarisation(thresholdH); // binarisation
-
-		// TODO : identification des centres des 2 nuages de points
+		
+		// Projection
+		Dataset imgProjH =  (Dataset) os.run("projection", imgIn, false); // supprimer Dataset pour affichage intermédiaire
+		ImgPlus<IntType> imgProjHPL = (ImgPlus<IntType>) imgProjH.getImgPlus();	
+		
+		// Calcul "dynamique" du seuil de binarisation et binarisation
+		int thresholdH = UtilGrid.getThreshold(imgProjHPL); // récupération du seuil de binarisation
+		Threshold<T> tH = new Threshold<T>(imgProjHPL);
+		ImgPlus<UnsignedByteType> imgProjH_bin = tH.binarisation(thresholdH); // binarisation
+		ImageJFunctions.show(imgProjH_bin); // affichage pour debug
+		
+		// Version utilisant le module
+		/*ImgPlus<UnsignedByteType> imgProjH_bin = (ImgPlus<UnsignedByteType>) os.run("binarisation", imgProjHPL, thresholdH); 
+		ImageJFunctions.show(imgProjH_bin);*/
+		
 		
 		// Idem verticalement //
-		ImgPlus<UnsignedByteType> imgProjV = UtilGrid.project(imgOut, true);
-		ImageJFunctions.show(imgProjH); // affichage pour debug
-		int thresholdV = UtilGrid.getThreshold(imgProjV);
-		Threshold<T> tV = new Threshold<T>(imgProjV);
-		imgProjV = tV.binarisation(thresholdV);
 		
-
+		// Projection
+		Dataset imgProjV =  (Dataset) os.run("projection", imgIn, true); // supprimer Dataset pour affichage intermédiaire
+		ImgPlus<IntType> imgProjVPL = (ImgPlus<IntType>) imgProjV.getImgPlus();
+		
+		// Calcul "dynamique" du seuil de binarisation et binarisation
+		int thresholdV = UtilGrid.getThreshold(imgProjVPL);
+		Threshold<T> tV = new Threshold<T>(imgProjVPL);
+		ImgPlus<UnsignedByteType> imgProjV_bin = tV.binarisation(thresholdV); // binarisation
+		ImageJFunctions.show(imgProjV_bin); // affichage pour debug
+		
+		// TODO : identification des centres des 2 nuages de points
 		
 
 	}

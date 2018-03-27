@@ -1,25 +1,17 @@
 package morpion;
 
-import org.scijava.ItemIO;
-import org.scijava.command.Command;
-import org.scijava.plugin.Parameter;
-import org.scijava.plugin.Plugin;
-
 import net.imagej.ImgPlus;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 public class Threshold<T extends RealType<T>> {
 	
-	private ImgPlus<UnsignedByteType> image;
-	
-/*	public Threshold(ImgPlus<T> image) {
-		this.image = image;
-	}*/
-	
-	public Threshold(ImgPlus<UnsignedByteType> image) {
+	private ImgPlus<IntType> image;
+		
+	public Threshold(ImgPlus<IntType> image) {
 		this.image = image;
 	}
 
@@ -37,7 +29,7 @@ public class Threshold<T extends RealType<T>> {
 		imageConv.setName(image.getName() + "_Mask");
 
 		// Two random cursor to visit all pixels in the input and output images.
-		RandomAccess<UnsignedByteType> cursorIn = image.randomAccess();
+		RandomAccess<IntType> cursorIn = image.randomAccess();
 		RandomAccess<UnsignedByteType> cursorOut = imageConv.randomAccess();
 		
 		// Completez ce code en utilisant les deux curseurs, un pour lire les
@@ -58,7 +50,7 @@ public class Threshold<T extends RealType<T>> {
 				cursorOut.setPosition(pos);
 				
 				// 4. Obtenir l'intensité de l'image à la position p
-				UnsignedByteType intensity = cursorIn.get();
+				RealType<?> intensity = cursorIn.get();
 				
 				// 5. Affecter pixel de l'image de sortie
 				if (intensity.getRealDouble() > threshold)

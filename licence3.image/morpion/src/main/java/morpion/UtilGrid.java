@@ -3,15 +3,16 @@ package morpion;
 
 import java.util.Arrays;
 
+import net.imagej.Dataset;
 import net.imagej.ImgPlus;
 import net.imglib2.RandomAccess;
-import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 public class UtilGrid<T> {
-
+/*
 	public static ImgPlus<UnsignedByteType> project(ImgPlus<UnsignedByteType> img, boolean vertical) {
 		
 		// Récupération des dimensions de l'image d'entrée
@@ -52,9 +53,9 @@ public class UtilGrid<T> {
 			
 		return imgProj;
 	}
+*/	
 	
-	
-	public static int getThreshold(ImgPlus<UnsignedByteType> img) {
+	public static int getThreshold(ImgPlus<IntType> img) {
 		
 		// Récupération des dimensions de l'image d'entrée
 		long[] dims = new long[img.numDimensions()];
@@ -64,7 +65,7 @@ public class UtilGrid<T> {
 		
 		int[] intensityTab = new int[(int) maxDim]; // cast car impossible de créer un tab de taille long
 		
-		RandomAccess<UnsignedByteType> imgCursor = img.randomAccess();
+		RandomAccess<IntType> imgCursor = img.randomAccess();
 		
 		long[] posImg = new long[img.numDimensions()];
 		posImg[vertical ? 0 : 1] = 0; // on fixe à 0 la coordonnée sur laquelle on ne se déplace pas
@@ -76,9 +77,9 @@ public class UtilGrid<T> {
 			intensityTab[i] = imgCursor.get().getInteger();
 		}
 		
-		// Tri du tableau et détermination de la valeur du threshod (dernier quartile)
+		// Tri du tableau et détermination de la valeur du threshod
 		Arrays.sort(intensityTab); 
-		int threshold = intensityTab[intensityTab.length*3/4];
+		int threshold = intensityTab[intensityTab.length*1/50]; 
 		
 		return threshold;
 	}

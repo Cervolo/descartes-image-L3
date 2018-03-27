@@ -6,19 +6,22 @@ import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
 import net.imagej.ImgPlus;
+import net.imagej.ops.AbstractOp;
+import net.imagej.ops.Op;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
-@Plugin(type = Command.class)
-public class ThresholdImage<T extends RealType<T>> implements Command {
+@Plugin(type = Op.class, name = "binarisation")
+public class ThresholdImage<T extends RealType<T>> extends AbstractOp {
 
-	@Parameter(persist = false)
-	ImgPlus<T> image;
+	@Parameter
+	ImgPlus<IntType> image;
 
-	@Parameter(required = false)
-	int threshold = 127;
+	@Parameter
+	int threshold;
 
 	@Parameter(type = ItemIO.OUTPUT)
 	ImgPlus<UnsignedByteType> imageConv;
@@ -33,7 +36,7 @@ public class ThresholdImage<T extends RealType<T>> implements Command {
 		imageConv.setName(image.getName() + "_Mask");
 
 		// Two random cursor to visit all pixels in the input and output images.
-		RandomAccess<T> cursorIn = image.randomAccess();
+		RandomAccess<IntType> cursorIn = image.randomAccess();
 		RandomAccess<UnsignedByteType> cursorOut = imageConv.randomAccess();
 
 		// Completez ce code en utilisant les deux curseurs, un pour lire les
@@ -54,7 +57,7 @@ public class ThresholdImage<T extends RealType<T>> implements Command {
 				cursorOut.setPosition(pos);
 				
 				// 4. Obtenir les intensités de l'image à la position p
-				T intensity = cursorIn.get();
+				IntType intensity = cursorIn.get();
 				
 				// 5. Affecter pixel de l'image de sortie
 				if (intensity.getRealDouble() > threshold)
