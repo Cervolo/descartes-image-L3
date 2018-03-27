@@ -6,6 +6,11 @@ import java.util.Arrays;
 import net.imagej.Dataset;
 import net.imagej.ImgPlus;
 import net.imglib2.RandomAccess;
+<<<<<<< HEAD
+=======
+import net.imglib2.img.ImagePlusAdapter;
+import net.imglib2.img.Img;
+>>>>>>> refs/heads/master
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.IntType;
@@ -50,6 +55,8 @@ public class UtilGrid<T> {
                 projCursor.get().set(sum);
             }
         }
+        
+        // test test
 			
 		return imgProj;
 	}
@@ -63,7 +70,7 @@ public class UtilGrid<T> {
 		long maxDim = Math.max(dims[0], dims[1]);
 		boolean vertical = (maxDim==dims[1]) ? true : false;
 		
-		int[] intensityTab = new int[(int) maxDim]; // cast car impossible de créer un tab de taille long
+		int[] intensityTab = new int[(int) maxDim]; // cast car impossible de créer un tab de taille long		
 		
 		RandomAccess<IntType> imgCursor = img.randomAccess();
 		
