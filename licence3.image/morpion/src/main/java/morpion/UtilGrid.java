@@ -147,10 +147,10 @@ public class UtilGrid<T> {
 			gridCoord[1][0] = moyenne2;
 		
 		// Pour debug
-		System.out.println(moyenne1);
+		/*System.out.println(moyenne1);
 		System.out.println(moyenne2);
 		System.out.println(gridCoord[0][0] + " " + gridCoord[0][1]);
-		System.out.println(gridCoord[1][0] + " " + gridCoord[1][1]);
+		System.out.println(gridCoord[1][0] + " " + gridCoord[1][1]);*/
 		
 		return gridCoord;		
 	}

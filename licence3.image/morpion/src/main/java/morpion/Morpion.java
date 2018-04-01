@@ -122,6 +122,56 @@ public class Morpion<T extends RealType<T>> implements Command {
 		long[][] gridCoordH = UtilGrid.getGrid(imgProjV_bin);
 		
 		
+		// Création des 9 cellules de la grille de jeu //
+
+		long[] C1_1 = {0, 0};
+		long[] C1_2 = {gridCoordH[0][0]-1, gridCoordV[0][1]-1};
+		Cell C1 = new Cell(C1_1, C1_2);
+		
+		long[] C2_1 = {gridCoordH[0][0]+1, 0};
+		long[] C2_2 = {gridCoordH[1][0]-1, gridCoordV[0][1]-1};
+		Cell C2 = new Cell(C2_1, C2_2);
+		
+		long[] C3_1 = {gridCoordH[1][0]+1, 0};
+		long[] C3_2 = {dims[0]-1, gridCoordV[0][1]-1};
+		Cell C3 = new Cell(C3_1, C3_2);
+		
+		long[] C4_1 = {0, gridCoordV[0][1]+1};
+		long[] C4_2 = {gridCoordH[0][0]-1, gridCoordV[1][1]-1};
+		Cell C4 = new Cell(C4_1, C4_2);
+		
+		long[] C5_1 = {gridCoordH[0][0]+1, gridCoordV[0][1]+1};
+		long[] C5_2 = {gridCoordH[1][0]-1, gridCoordV[1][1]-1};
+		Cell C5 = new Cell(C5_1, C5_2);
+		
+		long[] C6_1 = {gridCoordH[1][0]+1, gridCoordV[0][1]+1};
+		long[] C6_2 = {dims[0]-1, gridCoordV[1][1]-1};
+		Cell C6 = new Cell(C6_1, C6_2);
+		
+		long[] C7_1 = {0, gridCoordV[1][1]+1};
+		long[] C7_2 = {gridCoordH[0][0]-1, dims[1]-1};
+		Cell C7 = new Cell(C7_1, C7_2);
+		
+		long[] C8_1 = {gridCoordH[0][0]+1, gridCoordV[1][1]+1};
+		long[] C8_2 = {gridCoordH[1][0]-1, dims[1]-1};
+		Cell C8 = new Cell(C8_1, C8_2);
+		
+		long[] C9_1 = {gridCoordH[1][0]+1, gridCoordV[1][1]+1};
+		long[] C9_2 = {dims[0]-1, dims[1]-1};
+		Cell C9 = new Cell(C9_1, C9_2);
+		
+		// Affichage des coordonnées des cellules pour debug
+		/*C1.printCell("C1");
+		C2.printCell("C2");
+		C3.printCell("C3");
+		C4.printCell("C4");
+		C5.printCell("C5");
+		C6.printCell("C6");
+		C7.printCell("C7");
+		C8.printCell("C8");
+		C9.printCell("C9");*/
+		
+		
 
 	}
 

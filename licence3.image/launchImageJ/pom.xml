@@ -9,8 +9,6 @@
 	</parent>
 
 	<artifactId>launchImageJ</artifactId>
-	<groupId>fr.parisdescartes</groupId>
-	<version>0.0.1</version>
 
 	<name>Launch ImageJ</name>
 	<description>A Main class that launches ImageJ</description>
