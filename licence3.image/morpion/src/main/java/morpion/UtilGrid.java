@@ -6,11 +6,8 @@ import java.util.Arrays;
 import net.imagej.Dataset;
 import net.imagej.ImgPlus;
 import net.imglib2.RandomAccess;
-<<<<<<< HEAD
-=======
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
->>>>>>> refs/heads/master
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.IntType;

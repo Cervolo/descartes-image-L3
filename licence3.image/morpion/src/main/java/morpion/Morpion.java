@@ -15,15 +15,13 @@ import net.imagej.Dataset;
 import net.imagej.DatasetService;
 import net.imagej.ImgPlus;
 import net.imagej.ops.OpService;
-<<<<<<< HEAD
-=======
 import net.imglib2.histogram.Histogram1d;
->>>>>>> refs/heads/master
+
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.histogram.Histogram1d;
 
 //import net.imglib2.img.display.imagej.ImageJFunctions;
 
@@ -67,18 +65,14 @@ public class Morpion<T extends RealType<T>> implements Command {
 		ImagePlus imgPL = convs.convert(imgIn, ImagePlus.class);
 		ImageConverter converter = new ImageConverter(imgPL);
 		converter.convertToGray8();
-<<<<<<< HEAD
 		ImgPlus<UnsignedByteType> imgOut = new ImgPlus<UnsignedByteType>(ImagePlusAdapter.wrapByte(imgPL), imgIn.getName());
-=======
 		imgOut = new ImgPlus<UnsignedByteType>(ImagePlusAdapter.wrapByte(imgPL), imgIn.getName());
->>>>>>> refs/heads/master
 		
 		// Egalisation de l'histogramme
-<<<<<<< HEAD
+
 		imgOut = (ImgPlus<UnsignedByteType>) os.run("equalizeHistogram", imgOut, 256); 
-=======
 		//imgOut = (ImgPlus<UnsignedByteType>) os.run("equalizeHistogram", imgIn, 256);
->>>>>>> refs/heads/master
+
 				
 		// Binarisation de l'image de départ par Otsu
 		Histogram1d<UnsignedByteType> histogram = os.image().histogram(imgOut);
@@ -97,8 +91,7 @@ public class Morpion<T extends RealType<T>> implements Command {
 		//* Détermination de la grille de jeu *//
 		
 		// Horizontalement //
-<<<<<<< HEAD
-		
+
 		// Projection
 		Dataset imgProjH =  (Dataset) os.run("projection", imgIn, false); // supprimer Dataset pour affichage intermédiaire
 		ImgPlus<IntType> imgProjHPL = (ImgPlus<IntType>) imgProjH.getImgPlus();	
@@ -127,27 +120,6 @@ public class Morpion<T extends RealType<T>> implements Command {
 		ImageJFunctions.show(imgProjV_bin); // affichage pour debug
 		
 		// TODO : identification des centres des 2 nuages de points
-=======
-		ImgPlus<UnsignedByteType> imgProjH = UtilGrid.project(imgOut, false); // projection mais ne se fait pas correctement (pb de type ?)
-		ImageJFunctions.show(imgProjH); // affichage pour debug
-		int thresholdH = UtilGrid.getThreshold(imgProjH); // récupération du seuil de binarisation (3ieme quartile des intensités)
-		// TODO : inverser les pixels
-		Threshold<T> tH = new Threshold<T>(imgProjH);
-		imgProjH = tH.binarisation(thresholdH); // binarisation
-
-		// TODO : identification des centres des 2 nuages de points
-		
-		// Idem verticalement //
-		ImgPlus<UnsignedByteType> imgProjV = UtilGrid.project(imgOut, true);
-		ImageJFunctions.show(imgProjH); // affichage pour debug
-		int thresholdV = UtilGrid.getThreshold(imgProjV);
-		Threshold<T> tV = new Threshold<T>(imgProjV);
-		imgProjV = tV.binarisation(thresholdV);
-		
-
->>>>>>> refs/heads/master
-		
-
 	}
 
 }
