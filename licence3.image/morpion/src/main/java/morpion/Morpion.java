@@ -102,10 +102,9 @@ public class Morpion<T extends RealType<T>> implements Command {
 		ImgPlus<UnsignedByteType> imgProjH_bin = tH.binarisation(thresholdH); // binarisation
 		ImageJFunctions.show(imgProjH_bin); // affichage pour debug
 		
-		// Version utilisant le module
-		/*ImgPlus<UnsignedByteType> imgProjH_bin = (ImgPlus<UnsignedByteType>) os.run("binarisation", imgProjHPL, thresholdH); 
-		ImageJFunctions.show(imgProjH_bin);*/
-		
+		// Extraction des coordonnées de la grille de jeu
+		long[][] gridCoordV = UtilGrid.getGrid(imgProjH_bin);
+			
 		
 		// Idem verticalement //
 		
@@ -119,7 +118,11 @@ public class Morpion<T extends RealType<T>> implements Command {
 		ImgPlus<UnsignedByteType> imgProjV_bin = tV.binarisation(thresholdV); // binarisation
 		ImageJFunctions.show(imgProjV_bin); // affichage pour debug
 		
-		// TODO : identification des centres des 2 nuages de points
+		// Extraction des coordonnées de la grille de jeu
+		long[][] gridCoordH = UtilGrid.getGrid(imgProjV_bin);
+		
+		
+
 	}
 
 }
