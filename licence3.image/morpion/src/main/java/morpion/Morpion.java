@@ -174,9 +174,9 @@ public class Morpion<T extends RealType<T>> implements Command {
 		Map<Cell, Shape> mapCells = new HashMap<>();
 		
 		for(Cell cell : tabCells) {
-			// cell.printCell("Cell"); // debug
+			//cell.printCell("Cell"); // debug
 			cell = cell.crop();
-			// cell.printCell("Crop"); // debug
+			//cell.printCell("Crop"); // debug
 			//System.out.println(cell.isEmpty()); // debug
 			if (cell.isEmpty())
 				mapCells.put(cell, Shape.EMPTY);
@@ -189,6 +189,10 @@ public class Morpion<T extends RealType<T>> implements Command {
 		
 		// TODO : compter nombre de croix et de cercle pr déterminer qui doit jouer ensuite, et si jeu fini
 		
+		
+		//* Restitution des informations extraites de l'image *//
+		
+		// TODO
 		
 		}
 }

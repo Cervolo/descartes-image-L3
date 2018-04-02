@@ -1,5 +1,7 @@
 package morpion;
 
+import java.util.ArrayList;
+
 import net.imagej.ImgPlus;
 import net.imglib2.RandomAccess;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
@@ -53,7 +55,37 @@ public class Cell {
 	 */
 	public Shape getShape() {
 		
-		//TODO
+		// Calcul du centre de la case
+		long xmiddle = topLeftCorner[0] + ((bottomRightCorner[0] - topLeftCorner[0])/2);
+		long ymiddle = topLeftCorner[1] + ((bottomRightCorner[1] - topLeftCorner[1])/2);
+		long[] middle = {xmiddle, ymiddle};
+		
+		ArrayList<Long> distances = new ArrayList<>();
+		int intensity;
+		RandomAccess<UnsignedByteType> imgCursor = image.randomAccess();
+		long[] posImg = new long[2];
+		
+		// Parcours de tous les pixels de la case
+		for (long i=topLeftCorner[0] ; i<=bottomRightCorner[0] ; i++) {
+			posImg[0] = i;
+			for (long j=topLeftCorner[1] ; j<=bottomRightCorner[1] ; j++) {
+				posImg[1] = j;
+				imgCursor.setPosition(posImg);
+				intensity = imgCursor.get().getInteger();
+				
+				// Si pixel noir : calcul de la distance du centre à la position courante
+				if (intensity==0)
+					distances.add(compute1Distance(middle, posImg));		
+			}		
+		}	
+		
+		distances.sort(null); // tri par ordre croissant
+		
+		
+		
+		
+		
+		
 		
 		return Shape.CROSS;
 	}
@@ -96,16 +128,7 @@ public class Cell {
 		
 		long[] tlc = {xmin, ymin};
 		long[] brc = {xmax, ymax};
-		return new Cell(tlc ,brc , this.getImage());
-	}
-	
-	
-	/**
-	 * Getter for image attribute.
-	 * @return The value of the image attribute of the cell.
-	 */
-	public ImgPlus<UnsignedByteType> getImage() {
-		return this.image;
+		return new Cell(tlc ,brc , image);
 	}
 	
 	
@@ -117,5 +140,16 @@ public class Cell {
 		System.out.println("** " + name + " **");
 		System.out.println("Coin haut : (" + topLeftCorner[0] + ", " + topLeftCorner[1] + ")");
 		System.out.println("Coin bas : (" + bottomRightCorner[0] + ", " + bottomRightCorner[1] + ")\n");
+	}
+	
+	
+	/**
+	 * Compute the taxicab distance between 2 pixels.
+	 * @param pix1 Coordinates of the first pixel.
+	 * @param pix2 Coordinates of the second pixel.
+	 * @return The taxicab distance between the 2 pixels.
+	 */
+	private static long compute1Distance(long[] pix1, long[] pix2) {
+		return Math.abs(pix1[0] - pix1[1]) + Math.abs(pix2[0] - pix2[1]);
 	}
 }
