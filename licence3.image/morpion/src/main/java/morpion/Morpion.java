@@ -83,7 +83,8 @@ public class Morpion<T extends RealType<T>> implements Command {
 			e.printStackTrace();
 		}
 		
-				
+		ImageJFunctions.show(imgOut); // affichage pour debug
+		
 		//* Détermination de la grille de jeu *//
 		
 		// Horizontalement //
@@ -167,6 +168,20 @@ public class Morpion<T extends RealType<T>> implements Command {
 		//TODO
 		
 		
+		/* TEST */
+		/*long[] C1_1 = {0, 0};
+		long[] C1_2 = {dims[0]-1, dims[1]-1};
+		Cell C1 = new Cell(C1_1, C1_2, imgOut);
+		Map<Cell, Shape> mapCells = new HashMap<>();
+		C1.printCell("Cell"); // debug
+		C1 = C1.crop();
+		C1.printCell("Crop"); // debug
+		System.out.println("isEmpty ? " + C1.isEmpty()); // debug
+		if (C1.isEmpty())
+			mapCells.put(C1, Shape.EMPTY);
+		else
+			mapCells.put(C1, C1.getShape());
+		System.out.println(mapCells.get(C1));*/
 		
 		//* Détermination du contenu des cases *//
 		

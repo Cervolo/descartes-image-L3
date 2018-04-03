@@ -54,17 +54,18 @@ public class Cell {
 	 * @return The kind of shape found inside the cell.
 	 */
 	public Shape getShape() {
-		
+
 		// Calcul du centre de la case
 		long xmiddle = topLeftCorner[0] + ((bottomRightCorner[0] - topLeftCorner[0])/2);
 		long ymiddle = topLeftCorner[1] + ((bottomRightCorner[1] - topLeftCorner[1])/2);
 		long[] middle = {xmiddle, ymiddle};
-		
-		ArrayList<Long> distances = new ArrayList<>();
+		System.out.println("Middle : (" + xmiddle + ", " + ymiddle + ")");
+
+		ArrayList<Double> distances = new ArrayList<>();
 		int intensity;
 		RandomAccess<UnsignedByteType> imgCursor = image.randomAccess();
 		long[] posImg = new long[2];
-		
+
 		// Parcours de tous les pixels de la case
 		for (long i=topLeftCorner[0] ; i<=bottomRightCorner[0] ; i++) {
 			posImg[0] = i;
@@ -72,22 +73,34 @@ public class Cell {
 				posImg[1] = j;
 				imgCursor.setPosition(posImg);
 				intensity = imgCursor.get().getInteger();
-				
+
 				// Si pixel noir : calcul de la distance du centre à la position courante
 				if (intensity==0)
-					distances.add(compute1Distance(middle, posImg));		
+					distances.add(compute1Distance(middle, posImg));	
 			}		
 		}	
 		
 		distances.sort(null); // tri par ordre croissant
+		double maxDist = distances.get(distances.size()-1); // récupération de la plus grande distance trouvée
+		//System.out.println("maxDist : " + maxDist);
+
+		// Calcul de la distance moyenne
+		double sumDist = 0;
+		for (int i=0 ; i<distances.size() ; i++)
+			sumDist += distances.get(i);
+		//System.out.println("sumDist : " + sumDist);
 		
-		
-		
-		
-		
-		
-		
-		return Shape.CROSS;
+		double moyDist = sumDist / distances.size();
+		//System.out.println("distances.size() : " + distances.size());
+		//System.out.println("moyDist : " + moyDist);
+
+		// Identification de la forme
+		double rapport = moyDist / maxDist;
+		//System.out.println("rapport : " + rapport);
+		if (rapport >= 0.65)
+			return Shape.CIRCLE;
+		else
+			return Shape.CROSS;
 	}
 	
 	
@@ -149,7 +162,7 @@ public class Cell {
 	 * @param pix2 Coordinates of the second pixel.
 	 * @return The taxicab distance between the 2 pixels.
 	 */
-	private static long compute1Distance(long[] pix1, long[] pix2) {
-		return Math.abs(pix1[0] - pix1[1]) + Math.abs(pix2[0] - pix2[1]);
+	private static double compute1Distance(long[] pix1, long[] pix2) {
+		return (Math.abs(pix1[0] - pix2[0]) + Math.abs(pix1[1] - pix2[1]));
 	}
 }
