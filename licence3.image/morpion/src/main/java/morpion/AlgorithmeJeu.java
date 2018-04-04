@@ -84,6 +84,8 @@ public class AlgorithmeJeu {
 			System.out.println("Match nulle");
 		}
 		else {
+			
+			
 			String tour="";
 			if (coupsCroix>coupsRond) tour="C'est au tour du joueur rond";
 			else if (coupsCroix<coupsRond) tour="C'est au tour du joueur croix";
