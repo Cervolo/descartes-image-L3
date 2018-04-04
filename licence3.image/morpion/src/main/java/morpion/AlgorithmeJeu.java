@@ -6,6 +6,9 @@ public class AlgorithmeJeu {
 	private boolean victoireCROIX =false;
 	private boolean victoireROND =false;
 	private int nbrCoups=9;
+	private int coupsRond=0;
+	private int coupsCroix=0;
+	
 	
 	public AlgorithmeJeu(String[] morpion) {
 		this.morpion = morpion;
@@ -15,6 +18,8 @@ public class AlgorithmeJeu {
 		
 		for (int i=0;i<morpion.length;i++) {
 			if (morpion[i]=="EMPTY") nbrCoups--;
+			if (morpion[i]=="ROND") coupsRond++;
+			if (morpion[i]=="CROIX") coupsCroix++;
 		}
 		
 		if (morpion[1]== "CROIX" && morpion[2]=="CROIX" &&morpion[3]=="CROIX") {
@@ -79,7 +84,10 @@ public class AlgorithmeJeu {
 			System.out.println("Match nulle");
 		}
 		else {
-			System.out.println("Partie toujours en cours actuellement au "+nbrCoups+" Coups");
+			String tour="";
+			if (coupsCroix>coupsRond) tour="C'est au tour du joueur rond";
+			else if (coupsCroix<coupsRond) tour="C'est au tour du joueur croix";
+			System.out.println("Partie toujours en cours actuellement au "+nbrCoups+" Coups "+ tour);
 		}
 	
 }
