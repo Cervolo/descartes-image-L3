@@ -1,8 +1,11 @@
 package morpion;
 
+import java.util.HashMap;
+
 public class AlgorithmeJeu {
 
-	private String[] morpion = new String[9];
+	//private String[] morpion = new String[9];
+	private HashMap<Cell, Shape> morpion;
 	private boolean victoireCROIX =false;
 	private boolean victoireROND =false;
 	private int nbrCoups=9;
@@ -10,65 +13,73 @@ public class AlgorithmeJeu {
 	private int coupsCroix=0;
 	
 	
-	public AlgorithmeJeu(String[] morpion) {
+	public AlgorithmeJeu(HashMap<Cell, Shape> morpion) {
 		this.morpion = morpion;
 	}
 	
 	public void testVictoire() {
 		
-		for (int i=0;i<morpion.length;i++) {
-			if (morpion[i]=="EMPTY") nbrCoups--;
+		/*for (int i=0;i<morpion.size();i++) {
+			if (morpion[i]==Shape.EMPTY) nbrCoups--;
 			if (morpion[i]=="ROND") coupsRond++;
 			if (morpion[i]=="CROIX") coupsCroix++;
+		}*/
+		
+		for (Shape shape : morpion.values()) {
+			if (shape==Shape.EMPTY) nbrCoups--;
+			if (shape==Shape.CIRCLE) coupsRond++;
+			if (shape==Shape.CROSS) coupsCroix++;
 		}
 		
-		if (morpion[1]== "CROIX" && morpion[2]=="CROIX" &&morpion[3]=="CROIX") {
+		Shape[] tabShapes = morpion.values().toArray(new Shape[0]);
+		
+		if (tabShapes[0]==Shape.CROSS && tabShapes[1]==Shape.CROSS && tabShapes[2]==Shape.CROSS) {
 			victoireCROIX = true;
 		}
-		if (morpion[1]== "CROIX" && morpion[5]=="CROIX" &&morpion[9]=="CROIX") {
+		if (tabShapes[0]==Shape.CROSS && tabShapes[4]==Shape.CROSS && tabShapes[8]==Shape.CROSS) {
 			victoireCROIX = true;
 		}
-		if (morpion[1]== "CROIX" && morpion[4]=="CROIX" &&morpion[7]=="CROIX") {
+		if (tabShapes[0]==Shape.CROSS && tabShapes[3]==Shape.CROSS && tabShapes[6]==Shape.CROSS) {
 			victoireCROIX = true;
 		}
-		if (morpion[2]== "CROIX" && morpion[5]=="CROIX" &&morpion[8]=="CROIX") {
+		if (tabShapes[1]==Shape.CROSS && tabShapes[4]==Shape.CROSS && tabShapes[7]==Shape.CROSS) {
 			victoireCROIX = true;
 		}
-		if (morpion[3]== "CROIX" && morpion[5]=="CROIX" &&morpion[7]=="CROIX") {
+		if (tabShapes[2]==Shape.CROSS && tabShapes[4]==Shape.CROSS && tabShapes[6]==Shape.CROSS) {
 			victoireCROIX = true;
 		}
-		if (morpion[3]== "CROIX" && morpion[6]=="CROIX" &&morpion[9]=="CROIX") {
+		if (tabShapes[2]==Shape.CROSS && tabShapes[5]==Shape.CROSS && tabShapes[8]==Shape.CROSS) {
 			victoireCROIX = true;
 		}
-		if (morpion[4]== "CROIX" && morpion[5]=="CROIX" &&morpion[6]=="CROIX") {
+		if (tabShapes[3]==Shape.CROSS && tabShapes[4]==Shape.CROSS && tabShapes[5]==Shape.CROSS) {
 			victoireCROIX = true;
 		}
-		if (morpion[7]== "CROIX" && morpion[8]=="CROIX" &&morpion[9]=="CROIX") {
+		if (tabShapes[6]==Shape.CROSS && tabShapes[7]==Shape.CROSS && tabShapes[8]==Shape.CROSS) {
 			victoireCROIX = true;
 		}
 		
-		if (morpion[1]== "ROND" && morpion[2]=="ROND" &&morpion[3]=="ROND") {
+		if (tabShapes[0]==Shape.CIRCLE && tabShapes[1]==Shape.CIRCLE && tabShapes[2]==Shape.CIRCLE) {
 			victoireROND = true;
 		}
-		if (morpion[1]== "ROND" && morpion[5]=="ROND" &&morpion[9]=="ROND") {
+		if (tabShapes[0]==Shape.CIRCLE && tabShapes[4]==Shape.CIRCLE && tabShapes[8]==Shape.CIRCLE) {
 			victoireROND = true;
 		}
-		if (morpion[1]== "ROND" && morpion[4]=="ROND" &&morpion[7]=="ROND") {
+		if (tabShapes[0]==Shape.CIRCLE && tabShapes[3]==Shape.CIRCLE && tabShapes[6]==Shape.CIRCLE) {
 			victoireROND = true;
 		}
-		if (morpion[2]== "ROND" && morpion[5]=="ROND" &&morpion[8]=="ROND") {
+		if (tabShapes[1]==Shape.CIRCLE && tabShapes[4]==Shape.CIRCLE && tabShapes[7]==Shape.CIRCLE) {
 			victoireROND = true;
 		}
-		if (morpion[3]== "ROND" && morpion[5]=="ROND" &&morpion[7]=="ROND") {
+		if (tabShapes[2]==Shape.CIRCLE && tabShapes[4]==Shape.CIRCLE && tabShapes[6]==Shape.CIRCLE) {
 			victoireROND = true;
 		}
-		if (morpion[3]== "ROND" && morpion[6]=="ROND" &&morpion[9]=="ROND") {
+		if (tabShapes[2]==Shape.CIRCLE && tabShapes[5]==Shape.CIRCLE && tabShapes[8]==Shape.CIRCLE) {
 			victoireROND = true;
 		}
-		if (morpion[4]== "ROND" && morpion[5]=="ROND" &&morpion[6]=="ROND") {
+		if (tabShapes[3]==Shape.CIRCLE && tabShapes[4]==Shape.CIRCLE && tabShapes[5]==Shape.CIRCLE) {
 			victoireROND = true;
 		}
-		if (morpion[7]== "ROND" && morpion[8]=="ROND" &&morpion[9]=="ROND") {
+		if (tabShapes[6]==Shape.CIRCLE && tabShapes[7]==Shape.CIRCLE && tabShapes[8]==Shape.CIRCLE) {
 			victoireROND = true;
 		}
 		
@@ -83,14 +94,12 @@ public class AlgorithmeJeu {
 		else if (nbrCoups==9){
 			System.out.println("Match nulle");
 		}
-		else {
-			
-			
+		else {		
 			String tour="";
 			if (coupsCroix>coupsRond) tour="C'est au tour du joueur rond";
 			else if (coupsCroix<coupsRond) tour="C'est au tour du joueur croix";
 			System.out.println("Partie toujours en cours actuellement au "+nbrCoups+" Coups "+ tour);
 		}
 	
-}
+	}
 }
