@@ -41,13 +41,10 @@ public class Morpion<T extends RealType<T>> implements Command {
 	DatasetService ds;
 	
 	@Parameter(persist = false)
-	Dataset imgIn; // pour threshold
+	Dataset imgIn;
 
 	@Parameter(type = ItemIO.OUTPUT)
 	ImgPlus<UnsignedByteType> imgOut;
-	//ImgPlus<UnsignedByteType> imgProjH; // pour affichage intermédiare pr debug
-	//Dataset imgProjV; // pour affichage intermédiare pr debug
-	
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -60,12 +57,18 @@ public class Morpion<T extends RealType<T>> implements Command {
 		
 		//* Traitements préalables sur l'image *//
 		
-		// Pour convertir en niveaux de gris (8 bits)
+		// Conversion en niveaux de gris (8 bits)
 		ImagePlus imgPL = convs.convert(imgIn, ImagePlus.class);
 		ImageConverter converter = new ImageConverter(imgPL);
 		converter.convertToGray8();
 		ImgPlus<UnsignedByteType> imgOut = new ImgPlus<UnsignedByteType>(ImagePlusAdapter.wrapByte(imgPL), imgIn.getName());
-		imgOut = new ImgPlus<UnsignedByteType>(ImagePlusAdapter.wrapByte(imgPL), imgIn.getName());
+		//imgOut.setName(imgIn.getName() + "_Grayscale");
+		//ImageJFunctions.show(imgOut); // affichage pour debug
+		
+		// Suppression du bruit par filtre médian
+		imgOut = (ImgPlus<UnsignedByteType>) os.run("medianFilter", imgOut, 3);
+		imgOut.setName(imgIn.getName() + "_MedianFilter");
+		ImageJFunctions.show(imgOut); // affichage pour debug
 		
 		// Egalisation de l'histogramme
 		imgOut = (ImgPlus<UnsignedByteType>) os.run("equalizeHistogram", imgOut, 256); 
@@ -83,7 +86,8 @@ public class Morpion<T extends RealType<T>> implements Command {
 			e.printStackTrace();
 		}
 		
-		ImageJFunctions.show(imgOut); // affichage pour debug
+		//imgOut.setName(imgIn.getName() + "_Binary");
+		//ImageJFunctions.show(imgOut); // affichage pour debug
 		
 		//* Détermination de la grille de jeu *//
 		
