@@ -59,7 +59,7 @@ public class Cell {
 		long xmiddle = topLeftCorner[0] + ((bottomRightCorner[0] - topLeftCorner[0])/2);
 		long ymiddle = topLeftCorner[1] + ((bottomRightCorner[1] - topLeftCorner[1])/2);
 		long[] middle = {xmiddle, ymiddle};
-		System.out.println("Middle : (" + xmiddle + ", " + ymiddle + ")");
+		//System.out.println("Middle : (" + xmiddle + ", " + ymiddle + ")");
 
 		ArrayList<Double> distances = new ArrayList<>();
 		int intensity;
@@ -96,8 +96,8 @@ public class Cell {
 
 		// Identification de la forme
 		double rapport = moyDist / maxDist;
-		//System.out.println("rapport : " + rapport);
-		if (rapport >= 0.65)
+		System.out.println("rapport : " + rapport);
+		if (rapport >= 0.55)
 			return Shape.CIRCLE;
 		else
 			return Shape.CROSS;

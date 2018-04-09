@@ -3,6 +3,7 @@ package morpion;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import net.imagej.ImgPlus;
 import net.imglib2.RandomAccess;
@@ -55,11 +56,11 @@ public class UtilGrid<T> {
 	/**
 	 * Find the half grid position in an image.
 	 * @param img A projection (vertical or horizontal) of the image from which we want to extract the grid.
-	 * @return The coordinates of the half grid (horizontal or vertical). 
+	 * @return The coordinates of the half grid (horizontal or vertical), and the coordinates of the extremities of the scatter plots. 
 	 */
 	public static long[][] getGrid(ImgPlus<UnsignedByteType> img) {
 		
-		long[][] gridCoord = new long[2][2]; // retour : 2 couples de coordonnées
+		long[][] gridCoord = new long[6][2]; // retour : 6 couples de coordonnées
 		
 		long[] dims = new long[img.numDimensions()];
 		img.dimensions(dims);
@@ -69,12 +70,12 @@ public class UtilGrid<T> {
 		
 		// Initialisation des coordonnées nulles en fonction de l'orientation
 		if (vertical) {
-			gridCoord[0][0] = 0;
-			gridCoord[1][0] = 0;
+			for (int i=0; i<6 ; i++) 
+				gridCoord[i][0] = 0;
 		}
 		else {
-			gridCoord[0][1] = 0;
-			gridCoord[1][1] = 0;
+			for (int i=0; i<6 ; i++) 
+				gridCoord[i][1] = 0;
 		}
 		
 		// Pour stocker les coordonnées des pixels noirs
@@ -119,12 +120,140 @@ public class UtilGrid<T> {
 		else
 			gridCoord[1][0] = moyenne2;
 		
+		// Calcul des plages pour les nuages de points
+		if (vertical) {
+			gridCoord[2][1] = Collections.min(pixelTab1);
+			gridCoord[3][1] = Collections.min(pixelTab2);
+			gridCoord[4][1] = Collections.max(pixelTab1);
+			gridCoord[5][1] = Collections.max(pixelTab2);
+		}
+		else {
+			gridCoord[2][0] = Collections.min(pixelTab1);
+			gridCoord[3][0] = Collections.min(pixelTab2);
+			gridCoord[4][0] = Collections.max(pixelTab1);
+			gridCoord[5][0] = Collections.max(pixelTab2);
+		}
+		
 		// Pour debug
 		/*System.out.println(moyenne1);
 		System.out.println(moyenne2);
 		System.out.println(gridCoord[0][0] + " " + gridCoord[0][1]);
-		System.out.println(gridCoord[1][0] + " " + gridCoord[1][1]);*/
+		System.out.println(gridCoord[1][0] + " " + gridCoord[1][1]);
+		System.out.println(gridCoord[2][0] + " " + gridCoord[2][1]);
+		System.out.println(gridCoord[3][0] + " " + gridCoord[3][1]);
+		System.out.println(gridCoord[4][0] + " " + gridCoord[4][1]);
+		System.out.println(gridCoord[5][0] + " " + gridCoord[5][1]);*/
 		
 		return gridCoord;		
+	}
+	
+	
+	/**
+	 * Convert to white the connected component of a black pixel.
+	 * @param img The image to delete the grid from.
+	 * @param pixel The pixel to set to white.
+	 */
+	public static void deleteGrid(ImgPlus<UnsignedByteType> img, long[] pixel) {
+		long xpixel = pixel[0];
+		long ypixel = pixel[1];
+		long[] dims = new long[img.numDimensions()];
+		img.dimensions(dims);
+		long[] posImg = new long[img.numDimensions()];
+		int intensity;
+		
+		RandomAccess<UnsignedByteType> imgCursor = img.randomAccess();
+		
+		// Traitement du pixel courant
+		posImg[0] = xpixel;
+		posImg[1] = ypixel; 
+		imgCursor.setPosition(posImg);
+		intensity = imgCursor.get().getInteger();
+		if (intensity==0)
+			imgCursor.get().set(255);
+		else
+			return;
+		
+		/* Traitement des pixels connexes */
+		
+		// Pixel haut gauche (inutile car pixel obligatoirement déjà parcouru)
+/*		if (xpixel>0 && ypixel>0) {
+			posImg[0] = xpixel-1;
+			posImg[1] = ypixel-1; 
+			imgCursor.setPosition(posImg);
+			intensity = imgCursor.get().getInteger();
+			if (intensity==0)
+				deleteGrid(img, posImg);			
+		}
+*/		
+		// Pixel haut milieu
+		if (ypixel>0) {
+			posImg[0] = xpixel;
+			posImg[1] = ypixel-1; 
+			imgCursor.setPosition(posImg);
+			intensity = imgCursor.get().getInteger();
+			if (intensity==0)
+				deleteGrid(img, posImg);			
+		}	
+		
+		// Pixel haut droit
+		if (xpixel<dims[0] && ypixel>0) {
+			posImg[0] = xpixel+1;
+			posImg[1] = ypixel-1; 
+			imgCursor.setPosition(posImg);
+			intensity = imgCursor.get().getInteger();
+			if (intensity==0)
+				deleteGrid(img, posImg);			
+		}	
+		
+		// Pixel milieu gauche
+		if (xpixel>0) {
+			posImg[0] = xpixel-1;
+			posImg[1] = ypixel; 
+			imgCursor.setPosition(posImg);
+			intensity = imgCursor.get().getInteger();
+			if (intensity==0)
+				deleteGrid(img, posImg);			
+		}
+	
+		// Pixel milieu droit 
+		if (xpixel<dims[0]) {
+			posImg[0] = xpixel+1;
+			posImg[1] = ypixel; 
+			imgCursor.setPosition(posImg);
+			intensity = imgCursor.get().getInteger();
+			if (intensity==0)
+				deleteGrid(img, posImg);			
+		}
+		
+		// Pixel bas gauche
+		if (xpixel>0 && ypixel<dims[1]) {
+			posImg[0] = xpixel-1;
+			posImg[1] = ypixel+1; 
+			imgCursor.setPosition(posImg);
+			intensity = imgCursor.get().getInteger();
+			if (intensity==0)
+				deleteGrid(img, posImg);			
+		}
+		
+		// Pixel bas milieu
+		if (ypixel<dims[1]) {
+			posImg[0] = xpixel;
+			posImg[1] = ypixel+1; 
+			imgCursor.setPosition(posImg);
+			intensity = imgCursor.get().getInteger();
+			if (intensity==0)
+				deleteGrid(img, posImg);			
+		}
+
+		// Pixel bas droit
+		if (xpixel<dims[0] && ypixel<dims[1]) {
+			posImg[0] = xpixel+1;
+			posImg[1] = ypixel+1; 
+			imgCursor.setPosition(posImg);
+			intensity = imgCursor.get().getInteger();
+			if (intensity==0)
+				deleteGrid(img, posImg);			
+		}	
+			
 	}
 }

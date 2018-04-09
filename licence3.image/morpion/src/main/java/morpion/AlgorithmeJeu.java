@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class AlgorithmeJeu {
 
 	//private String[] morpion = new String[9];
-	private HashMap<Cell, Shape> morpion;
+	private Shape[] tabShapes;
 	private boolean victoireCROIX =false;
 	private boolean victoireROND =false;
 	private int nbrCoups=9;
@@ -13,8 +13,8 @@ public class AlgorithmeJeu {
 	private int coupsCroix=0;
 	
 	
-	public AlgorithmeJeu(HashMap<Cell, Shape> morpion) {
-		this.morpion = morpion;
+	public AlgorithmeJeu(Shape[] tabShapes) {
+		this.tabShapes = tabShapes;
 	}
 	
 	public void testVictoire() {
@@ -25,13 +25,14 @@ public class AlgorithmeJeu {
 			if (morpion[i]=="CROIX") coupsCroix++;
 		}*/
 		
-		for (Shape shape : morpion.values()) {
+		for (Shape shape : tabShapes) {
 			if (shape==Shape.EMPTY) nbrCoups--;
 			if (shape==Shape.CIRCLE) coupsRond++;
 			if (shape==Shape.CROSS) coupsCroix++;
 		}
 		
-		Shape[] tabShapes = morpion.values().toArray(new Shape[0]);
+		for (Shape shape : tabShapes)
+			System.out.println(shape);
 		
 		if (tabShapes[0]==Shape.CROSS && tabShapes[1]==Shape.CROSS && tabShapes[2]==Shape.CROSS) {
 			victoireCROIX = true;
@@ -85,20 +86,20 @@ public class AlgorithmeJeu {
 		
 		
 		if (victoireCROIX) {
-			System.out.println("Les Croix ont gagner en "+nbrCoups+"Coups");
+			System.out.println("Les Croix ont gagné en "+nbrCoups+" coups.");
 			
 		}
 		else if (victoireROND) {
-			System.out.println("Les Rond ont gagner en "+nbrCoups+"Coups");
+			System.out.println("Les Ronds ont gagné en "+nbrCoups+" coups.");
 		}
 		else if (nbrCoups==9){
-			System.out.println("Match nulle");
+			System.out.println("Match nul");
 		}
 		else {		
 			String tour="";
-			if (coupsCroix>coupsRond) tour="C'est au tour du joueur rond";
+			if (coupsCroix>coupsRond) tour="C'est au tour du joueur Rond";
 			else if (coupsCroix<coupsRond) tour="C'est au tour du joueur croix";
-			System.out.println("Partie toujours en cours actuellement au "+nbrCoups+" Coups "+ tour);
+			System.out.println("Partie toujours en cours actuellement au coup " + nbrCoups + "." + tour);
 		}
 	
 	}

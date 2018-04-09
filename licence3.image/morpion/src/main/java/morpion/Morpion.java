@@ -17,6 +17,7 @@ import net.imagej.Dataset;
 import net.imagej.DatasetService;
 import net.imagej.ImgPlus;
 import net.imagej.ops.OpService;
+import net.imglib2.RandomAccess;
 import net.imglib2.histogram.Histogram1d;
 
 import net.imglib2.img.ImagePlusAdapter;
@@ -67,8 +68,8 @@ public class Morpion<T extends RealType<T>> implements Command {
 		
 		// Suppression du bruit par filtre médian
 		imgOut = (ImgPlus<UnsignedByteType>) os.run("medianFilter", imgOut, 3);
-		imgOut.setName(imgIn.getName() + "_MedianFilter");
-		ImageJFunctions.show(imgOut); // affichage pour debug
+		//imgOut.setName(imgIn.getName() + "_MedianFilter");
+		//ImageJFunctions.show(imgOut); // affichage pour debug
 		
 		// Egalisation de l'histogramme
 		imgOut = (ImgPlus<UnsignedByteType>) os.run("equalizeHistogram", imgOut, 256); 
@@ -94,7 +95,7 @@ public class Morpion<T extends RealType<T>> implements Command {
 		// Horizontalement //
 
 		// Projection
-		Dataset imgProjH =  (Dataset) os.run("projection", imgIn, false); // supprimer Dataset pour affichage intermédiaire
+		Dataset imgProjH =  (Dataset) os.run("projection", imgIn, false);
 		ImgPlus<IntType> imgProjHPL = (ImgPlus<IntType>) imgProjH.getImgPlus();	
 		
 		// Calcul "dynamique" du seuil de binarisation et binarisation
@@ -102,6 +103,7 @@ public class Morpion<T extends RealType<T>> implements Command {
 		Threshold<T> tH = new Threshold<T>(imgProjHPL);
 		ImgPlus<UnsignedByteType> imgProjH_bin = tH.binarisation(thresholdH); // binarisation
 		ImageJFunctions.show(imgProjH_bin); // affichage pour debug
+		//ImageJFunctions.show(imgProjH);
 		
 		// Extraction des coordonnées de la grille de jeu
 		long[][] gridCoordV = UtilGrid.getGrid(imgProjH_bin);
@@ -110,7 +112,7 @@ public class Morpion<T extends RealType<T>> implements Command {
 		// Idem verticalement //
 		
 		// Projection
-		Dataset imgProjV =  (Dataset) os.run("projection", imgIn, true); // supprimer Dataset pour affichage intermédiaire
+		Dataset imgProjV =  (Dataset) os.run("projection", imgIn, true);
 		ImgPlus<IntType> imgProjVPL = (ImgPlus<IntType>) imgProjV.getImgPlus();
 		
 		// Calcul "dynamique" du seuil de binarisation et binarisation
@@ -118,6 +120,7 @@ public class Morpion<T extends RealType<T>> implements Command {
 		Threshold<T> tV = new Threshold<T>(imgProjVPL);
 		ImgPlus<UnsignedByteType> imgProjV_bin = tV.binarisation(thresholdV); // binarisation
 		ImageJFunctions.show(imgProjV_bin); // affichage pour debug
+		//ImageJFunctions.show(imgProjV);
 		
 		// Extraction des coordonnées de la grille de jeu
 		long[][] gridCoordH = UtilGrid.getGrid(imgProjV_bin);
@@ -162,15 +165,32 @@ public class Morpion<T extends RealType<T>> implements Command {
 		Cell C9 = new Cell(C9_1, C9_2, imgOut);
 		
 		// Affichage des coordonnées des cellules pour debug
-		/*C1.printCell("C1");	C2.printCell("C2"); C3.printCell("C3");
+		/*C1.printCell("C1"); C2.printCell("C2"); C3.printCell("C3");
 		C4.printCell("C4"); C5.printCell("C5"); C6.printCell("C6");
 		C7.printCell("C7"); C8.printCell("C8"); C9.printCell("C9");*/
 		
 		
 		//* Effaçage de la grille *//
+		// (suppression de toutes les composantes connexes intersectant la zone de la grille)
 		
-		//TODO
+		long[] posImg = new long[2];
 		
+		// Première colonne
+		for (long i=gridCoordH[2][0] ; i<=gridCoordH[4][0] ; i++) {
+				posImg[0] = i;
+				for (long j=0 ; j<dims[1] ; j++) {
+					posImg[1] = j;
+					UtilGrid.deleteGrid(imgOut, posImg);
+				}
+		}
+		
+		// Seconde colonne
+		
+		// Première ligne
+		
+		// Seconde ligne
+		
+		ImageJFunctions.show(imgOut);
 		
 		/* TEST */
 		/*long[] C1_1 = {0, 0};
@@ -190,8 +210,20 @@ public class Morpion<T extends RealType<T>> implements Command {
 		//* Détermination du contenu des cases *//
 		
 		Cell[] tabCells = {C1, C2, C3, C4, C5, C6, C7, C8, C9};
-		Map<Cell, Shape> mapCells = new HashMap<>();
+		Shape[] tabShapes = new Shape[9];
+		//HashMap<Cell, Shape> mapCells = new HashMap<>();
 		
+		for (int i=0 ; i<tabCells.length ; i++) {
+			tabCells[i] = tabCells[i].crop();
+			if (tabCells[i].isEmpty())
+				tabShapes[i] = Shape.EMPTY;
+			else {
+				System.out.println(tabCells[i].getShape());
+				tabShapes[i] = tabCells[i].getShape();
+			}				
+		}
+		
+		/*
 		for(Cell cell : tabCells) {
 			//cell.printCell("Cell"); // debug
 			cell = cell.crop();
@@ -199,19 +231,19 @@ public class Morpion<T extends RealType<T>> implements Command {
 			//System.out.println(cell.isEmpty()); // debug
 			if (cell.isEmpty())
 				mapCells.put(cell, Shape.EMPTY);
-			else
+			else {
+				System.out.println(cell.getShape());
 				mapCells.put(cell, cell.getShape());
+			}				
 		}
+		*/
+		
 
 
-		//* Détermination du tour de jeu *//
+		//* Détermination du tour de jeu et restitution des informations extraites de l'image *//
 		
-		// TODO : compter nombre de croix et de cercle pr déterminer qui doit jouer ensuite, et si jeu fini
-		
-		
-		//* Restitution des informations extraites de l'image *//
-		
-		// TODO
+		AlgorithmeJeu resu = new AlgorithmeJeu(tabShapes);
+		resu.testVictoire();
 		
 		}
 }
