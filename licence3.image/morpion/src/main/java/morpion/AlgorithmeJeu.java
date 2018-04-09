@@ -31,8 +31,8 @@ public class AlgorithmeJeu {
 			if (shape==Shape.CROSS) coupsCroix++;
 		}
 		
-		for (Shape shape : tabShapes)
-			System.out.println(shape);
+		/*for (Shape shape : tabShapes)
+			System.out.println(shape);*/
 		
 		if (tabShapes[0]==Shape.CROSS && tabShapes[1]==Shape.CROSS && tabShapes[2]==Shape.CROSS) {
 			victoireCROIX = true;

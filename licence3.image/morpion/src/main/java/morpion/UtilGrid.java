@@ -47,7 +47,7 @@ public class UtilGrid<T> {
 		
 		// Tri du tableau et détermination de la valeur du threshod
 		Arrays.sort(intensityTab); 
-		int threshold = intensityTab[intensityTab.length*1/50]; 
+		int threshold = intensityTab[intensityTab.length*1/35]; 
 		
 		return threshold;
 	}
