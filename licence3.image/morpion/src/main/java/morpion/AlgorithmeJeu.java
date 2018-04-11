@@ -2,6 +2,13 @@ package morpion;
 
 import java.util.HashMap;
 
+import javax.swing.JOptionPane;
+
+/**
+ * Classe publique qui permets d'afficher le résultat du jeu de morpion
+ * @author Groupe 4 Image
+ *
+ */
 public class AlgorithmeJeu {
 
 	//private String[] morpion = new String[9];
@@ -12,10 +19,10 @@ public class AlgorithmeJeu {
 	private int coupsRond=0;
 	private int coupsCroix=0;
 	
-	
 	public AlgorithmeJeu(Shape[] tabShapes) {
 		this.tabShapes = tabShapes;
 	}
+	
 	
 	public void testVictoire() {
 		
@@ -86,20 +93,26 @@ public class AlgorithmeJeu {
 		
 		
 		if (victoireCROIX) {
-			System.out.println("Les Croix ont gagné en "+nbrCoups+" coups.");
-			
+			System.out.println();
+			JOptionPane.showMessageDialog(null,"Les Croix ont gagné en "+nbrCoups+" coups.", "Victoire Croix",
+				    JOptionPane.PLAIN_MESSAGE);
 		}
 		else if (victoireROND) {
-			System.out.println("Les Ronds ont gagné en "+nbrCoups+" coups.");
+			JOptionPane.showMessageDialog(null,"Les Ronds ont gagné en \"+nbrCoups+\" coups", "Victoire Rond",
+				    JOptionPane.PLAIN_MESSAGE);
 		}
 		else if (nbrCoups==9){
-			System.out.println("Match nul");
+			JOptionPane.showMessageDialog(null,"Match nulle", "Match nulle",
+				    JOptionPane.PLAIN_MESSAGE);
 		}
 		else {		
 			String tour="";
 			if (coupsCroix>coupsRond) tour="C'est au tour du joueur Rond";
 			else if (coupsCroix<coupsRond) tour="C'est au tour du joueur croix";
-			System.out.println("Partie toujours en cours actuellement au coup " + nbrCoups + "." + tour);
+			tour="Partie toujours en cours actuellement au coup " + nbrCoups + "." + tour;
+			JOptionPane.showMessageDialog(null,tour, "Partie en cours",
+				    JOptionPane.PLAIN_MESSAGE);
+		
 		}
 	
 	}
