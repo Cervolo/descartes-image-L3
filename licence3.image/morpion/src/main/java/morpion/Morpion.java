@@ -104,13 +104,13 @@ public class Morpion<T extends RealType<T>> implements Command {
 		// Projection
 		Dataset imgProjH =  (Dataset) os.run("projection", imgIn, false);
 		ImgPlus<IntType> imgProjHPL = (ImgPlus<IntType>) imgProjH.getImgPlus();	
+		ImageJFunctions.show(imgProjHPL);
 
 		// Calcul "dynamique" du seuil de binarisation et binarisation
 		int thresholdH = UtilGrid.getThreshold(imgProjHPL); // récupération du seuil de binarisation
 		Threshold<T> tH = new Threshold<T>(imgProjHPL);
 		ImgPlus<UnsignedByteType> imgProjH_bin = tH.binarisation(thresholdH); // binarisation
 		ImageJFunctions.show(imgProjH_bin); // affichage pour debug
-		//ImageJFunctions.show(imgProjH);
 
 		// Extraction des coordonnées de la grille de jeu
 		long[][] gridCoordV = UtilGrid.getGrid(imgProjH_bin);
@@ -121,13 +121,13 @@ public class Morpion<T extends RealType<T>> implements Command {
 		// Projection
 		Dataset imgProjV =  (Dataset) os.run("projection", imgIn, true);
 		ImgPlus<IntType> imgProjVPL = (ImgPlus<IntType>) imgProjV.getImgPlus();
+		ImageJFunctions.show(imgProjVPL);
 
 		// Calcul "dynamique" du seuil de binarisation et binarisation
 		int thresholdV = UtilGrid.getThreshold(imgProjVPL);
 		Threshold<T> tV = new Threshold<T>(imgProjVPL);
 		ImgPlus<UnsignedByteType> imgProjV_bin = tV.binarisation(thresholdV); // binarisation
 		ImageJFunctions.show(imgProjV_bin); // affichage pour debug
-		//ImageJFunctions.show(imgProjV);
 
 		// Extraction des coordonnées de la grille de jeu
 		long[][] gridCoordH = UtilGrid.getGrid(imgProjV_bin);
