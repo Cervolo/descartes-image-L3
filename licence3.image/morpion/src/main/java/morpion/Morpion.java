@@ -42,6 +42,9 @@ public class Morpion<T extends RealType<T>> implements Command {
 
 	@Parameter(persist = false)
 	Boolean noise = true;
+	
+	@Parameter(persist = false)
+	int quantile = 40;
 
 	@Parameter(type = ItemIO.OUTPUT)
 	ImgPlus<UnsignedByteType> imgOut;
@@ -62,14 +65,14 @@ public class Morpion<T extends RealType<T>> implements Command {
 		ImageConverter converter = new ImageConverter(imgPL);
 		converter.convertToGray8();
 		ImgPlus<UnsignedByteType> imgOut = new ImgPlus<UnsignedByteType>(ImagePlusAdapter.wrapByte(imgPL), imgIn.getName());
-		//imgOut.setName(imgIn.getName() + "_Grayscale");
-		//ImageJFunctions.show(imgOut); // affichage pour debug
+		imgOut.setName(imgIn.getName() + "_Grayscale");
+		ImageJFunctions.show(imgOut); // affichage pour debug
 
 		// Suppression du bruit par filtre médian
 		if (noise) {
 			imgOut = (ImgPlus<UnsignedByteType>) os.run("medianFilter", imgOut, 3);
-			//imgOut.setName(imgIn.getName() + "_MedianFilter");
-			//ImageJFunctions.show(imgOut); // affichage pour debug
+			imgOut.setName(imgIn.getName() + "_MedianFilter");
+			ImageJFunctions.show(imgOut); // affichage pour debug
 		}
 
 		// Egalisation de l'histogramme
@@ -87,14 +90,14 @@ public class Morpion<T extends RealType<T>> implements Command {
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		}		
-		//imgOut.setName(imgIn.getName() + "_Binary");
-		//ImageJFunctions.show(imgOut); // affichage pour debug
+		imgOut.setName(imgIn.getName() + "_Binary");
+		ImageJFunctions.show(imgOut); // affichage pour debug
 
 		// Dilatation
 		Dataset imgDil = (Dataset) os.run("dilation", imgOut);
 		imgOut = (ImgPlus<UnsignedByteType>) imgDil.getImgPlus();
-		//imgOut.setName(imgIn.getName() + "_Dilated");
-		//ImageJFunctions.show(imgOut); // affichage pour debug		
+		imgOut.setName(imgIn.getName() + "_Dilated");
+		ImageJFunctions.show(imgOut); // affichage pour debug		
 
 
 		//* Détermination de la grille de jeu *//
@@ -102,12 +105,12 @@ public class Morpion<T extends RealType<T>> implements Command {
 		// Horizontalement //
 
 		// Projection
-		Dataset imgProjH =  (Dataset) os.run("projection", imgIn, false);
+		Dataset imgProjH =  (Dataset) os.run("projection", imgOut, false);
 		ImgPlus<IntType> imgProjHPL = (ImgPlus<IntType>) imgProjH.getImgPlus();	
 		ImageJFunctions.show(imgProjHPL);
 
 		// Calcul "dynamique" du seuil de binarisation et binarisation
-		int thresholdH = UtilGrid.getThreshold(imgProjHPL); // récupération du seuil de binarisation
+		int thresholdH = UtilGrid.getThreshold(imgProjHPL, quantile); // récupération du seuil de binarisation
 		Threshold<T> tH = new Threshold<T>(imgProjHPL);
 		ImgPlus<UnsignedByteType> imgProjH_bin = tH.binarisation(thresholdH); // binarisation
 		ImageJFunctions.show(imgProjH_bin); // affichage pour debug
@@ -119,12 +122,12 @@ public class Morpion<T extends RealType<T>> implements Command {
 		// Idem verticalement //
 
 		// Projection
-		Dataset imgProjV =  (Dataset) os.run("projection", imgIn, true);
+		Dataset imgProjV =  (Dataset) os.run("projection", imgOut, true);
 		ImgPlus<IntType> imgProjVPL = (ImgPlus<IntType>) imgProjV.getImgPlus();
 		ImageJFunctions.show(imgProjVPL);
 
 		// Calcul "dynamique" du seuil de binarisation et binarisation
-		int thresholdV = UtilGrid.getThreshold(imgProjVPL);
+		int thresholdV = UtilGrid.getThreshold(imgProjVPL, quantile);
 		Threshold<T> tV = new Threshold<T>(imgProjVPL);
 		ImgPlus<UnsignedByteType> imgProjV_bin = tV.binarisation(thresholdV); // binarisation
 		ImageJFunctions.show(imgProjV_bin); // affichage pour debug
@@ -141,7 +144,7 @@ public class Morpion<T extends RealType<T>> implements Command {
 		for (long i=gridCoordH[2][0] ; i<=gridCoordH[4][0] ; i++) {
 			posImg[0] = i;
 			for (long j=0 ; j<dims[1] ; j++) {
-				posImg[1] = j;
+				posImg[1] = j; 
 				UtilGrid.deleteGrid(imgOut, posImg);
 			}
 		}

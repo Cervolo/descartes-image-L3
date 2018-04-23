@@ -85,11 +85,11 @@ public class AlgorithmeJeu {
 		
 		if (victoireCROIX) {
 			System.out.println();
-			JOptionPane.showMessageDialog(null,"Les Croix ont gagné en "+nbrCoups+" coups. ", "Victoire Croix",
+			JOptionPane.showMessageDialog(null,"Le joueur Croix a gagné en "+coupsCroix+" coups. ", "Victoire Croix",
 				    JOptionPane.PLAIN_MESSAGE);
 		}
 		else if (victoireROND) {
-			JOptionPane.showMessageDialog(null,"Les Ronds ont gagné en \"+nbrCoups+\" coups. ", "Victoire Rond",
+			JOptionPane.showMessageDialog(null,"Le joueur Rond a gagné en "+coupsRond+" coups. ", "Victoire Rond",
 				    JOptionPane.PLAIN_MESSAGE);
 		}
 		else if (nbrCoups==9){
@@ -98,9 +98,9 @@ public class AlgorithmeJeu {
 		}
 		else {		
 			String tour="";
-			if (coupsCroix>coupsRond) tour="C'est au tour du joueur Rond.";
-			else if (coupsCroix<coupsRond) tour="C'est au tour du joueur Croix.";
-			tour="Partie toujours en cours actuellement au coup " + nbrCoups + "." + tour;
+			if (coupsCroix>coupsRond) tour="C'est au tour du joueur Rond. ";
+			else if (coupsCroix<coupsRond) tour="C'est au tour du joueur Croix. ";
+			tour="Partie toujours en cours actuellement au coup " + nbrCoups + ". " + tour;
 			JOptionPane.showMessageDialog(null,tour, "Partie en cours",
 				    JOptionPane.PLAIN_MESSAGE);
 		

@@ -23,7 +23,7 @@ public class UtilGrid<T> {
 	 * @param img A projection (vertical or horizontal) of the image from which we want to compute the threshold.
 	 * @return The value of the threshold.
 	 */
-	public static int getThreshold(ImgPlus<IntType> img) {
+	public static int getThreshold(ImgPlus<IntType> img, int quantile) {
 		
 		// Récupération des dimensions de l'image d'entrée
 		long[] dims = new long[img.numDimensions()];
@@ -47,7 +47,7 @@ public class UtilGrid<T> {
 		
 		// Tri du tableau et détermination de la valeur du threshod
 		Arrays.sort(intensityTab); 
-		int threshold = intensityTab[intensityTab.length*1/40]; 
+		int threshold = intensityTab[intensityTab.length*1/quantile]; 
 		
 		return threshold;
 	}
@@ -175,7 +175,7 @@ public class UtilGrid<T> {
 		
 		/* Traitement des pixels connexes */
 		
-		// Pixel haut gauche (inutile car pixel obligatoirement déjà parcouru)
+		// Pixel gauche haut (inutile car pixel obligatoirement déjà parcouru)
 /*		if (xpixel>0 && ypixel>0) {
 			posImg[0] = xpixel-1;
 			posImg[1] = ypixel-1; 
@@ -185,47 +185,47 @@ public class UtilGrid<T> {
 				deleteGrid(img, posImg);			
 		}
 */		
-		// Pixel haut milieu
+		// Pixel milieu haut
 		if (ypixel>0) {
 			posImg[0] = xpixel;
 			posImg[1] = ypixel-1; 
 			imgCursor.setPosition(posImg);
 			intensity = imgCursor.get().getInteger();
-			if (intensity==0)
-				deleteGrid(img, posImg);			
+			if (intensity==0)			
+				deleteGrid(img, posImg);	
 		}	
 		
-		// Pixel haut droit
-		if (xpixel<dims[0]-1 && ypixel>0) {
+		// Pixel droit haut 
+		if (xpixel<dims[0]-1) {
 			posImg[0] = xpixel+1;
 			posImg[1] = ypixel-1; 
 			imgCursor.setPosition(posImg);
 			intensity = imgCursor.get().getInteger();
 			if (intensity==0)
-				deleteGrid(img, posImg);			
+				deleteGrid(img, posImg);	
 		}	
 		
-		// Pixel milieu gauche
+		// Pixel gauche milieu 
 		if (xpixel>0) {
 			posImg[0] = xpixel-1;
 			posImg[1] = ypixel; 
 			imgCursor.setPosition(posImg);
 			intensity = imgCursor.get().getInteger();
-			if (intensity==0)
-				deleteGrid(img, posImg);			
+			if (intensity==0) 
+				deleteGrid(img, posImg);		
 		}
 	
-		// Pixel milieu droit 
+		// Pixel droit milieu  
 		if (xpixel<dims[0]-1) {
 			posImg[0] = xpixel+1;
 			posImg[1] = ypixel; 
 			imgCursor.setPosition(posImg);
 			intensity = imgCursor.get().getInteger();
 			if (intensity==0)
-				deleteGrid(img, posImg);			
+				deleteGrid(img, posImg);	
 		}
 				
-		// Pixel bas gauche
+		// Pixel gauche bas 
 		if (xpixel>0 && ypixel<dims[1]-1) {
 			posImg[0] = xpixel-1;
 			posImg[1] = ypixel+1; 
@@ -235,7 +235,7 @@ public class UtilGrid<T> {
 				deleteGrid(img, posImg);			
 		}
 		
-		// Pixel bas milieu
+		// Pixel milieu bas 
 		if (ypixel<dims[1]-1) {
 			posImg[0] = xpixel;
 			posImg[1] = ypixel+1; 
@@ -245,8 +245,8 @@ public class UtilGrid<T> {
 				deleteGrid(img, posImg);			
 		}
 
-		// Pixel bas droit
-		if (xpixel<dims[0]-1 && ypixel<dims[1]-1) {
+		// Pixel droit bas 
+		if (xpixel<dims[0]-1) {
 			posImg[0] = xpixel+1;
 			posImg[1] = ypixel+1; 
 			imgCursor.setPosition(posImg);
@@ -254,6 +254,6 @@ public class UtilGrid<T> {
 			if (intensity==0)
 				deleteGrid(img, posImg);			
 		}	
-			
+		
 	}
 }

@@ -7,6 +7,7 @@ import org.scijava.plugin.Plugin;
 
 import net.imagej.Dataset;
 import net.imagej.DatasetService;
+import net.imagej.ImgPlus;
 import net.imagej.ops.AbstractOp;
 import net.imagej.ops.Op;
 import net.imagej.ops.OpService;
@@ -15,6 +16,7 @@ import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 
 @Plugin(type = Op.class, name = "projection")
@@ -30,7 +32,7 @@ public class ProjectImage<T extends RealType<T>> extends AbstractOp {
 	ConvertService convs;
 
 	@Parameter
-	Dataset img;
+	ImgPlus<UnsignedByteType> img;
 
 	@Parameter
 	boolean horizontal; // true = horizontal projection,
@@ -49,7 +51,7 @@ public class ProjectImage<T extends RealType<T>> extends AbstractOp {
 		long[] projDims = new long[] { horizontal ? dims[0] : 10, horizontal ? 10 : dims[1] };
 		Img<IntType> res = ArrayImgs.ints(projDims);
 
-		RandomAccess<RealType<?>> imgCursor = img.randomAccess();
+		RandomAccess<UnsignedByteType> imgCursor = img.randomAccess();
 		RandomAccess<IntType> projCursor = res.randomAccess();
 
 		long[] posImg = new long[img.numDimensions()];
@@ -67,8 +69,9 @@ public class ProjectImage<T extends RealType<T>> extends AbstractOp {
                 imgCursor.setPosition(posImg);
                 sum += imgCursor.get().getRealDouble();
             }
+            // System.out.println(sum);
 
-            // 3. On affecte la somme au pixel(s) de l'image de resultat
+            // 3. On affecte la somme aux pixels de l'image de résultat
             for (int j = 0; j < projDims[horizontal ? 1 : 0]; j++) {
                 posProj[horizontal ? 1 : 0] = j;
                 projCursor.setPosition(posProj);
