@@ -196,7 +196,7 @@ public class UtilGrid<T> {
 		}	
 		
 		// Pixel droit haut 
-		if (xpixel<dims[0]-1) {
+		if (xpixel<dims[0]-1 && ypixel>0) {
 			posImg[0] = xpixel+1;
 			posImg[1] = ypixel-1; 
 			imgCursor.setPosition(posImg);
@@ -246,7 +246,7 @@ public class UtilGrid<T> {
 		}
 
 		// Pixel droit bas 
-		if (xpixel<dims[0]-1) {
+		if (xpixel<dims[0]-1 && ypixel<dims[1]-1) {
 			posImg[0] = xpixel+1;
 			posImg[1] = ypixel+1; 
 			imgCursor.setPosition(posImg);
