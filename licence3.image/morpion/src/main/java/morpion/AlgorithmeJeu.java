@@ -88,7 +88,7 @@ public class AlgorithmeJeu {
 		}
 		else if (coupsCroix>coupsRond+1) {
 				JOptionPane.showMessageDialog(null,"Erreur le joueur Rond a joué "+coupsRond+" coups, tandis que le joueur Croix n'a joué que "+coupsCroix+" fois", "erreur",
-					    JOptionPane.PLAIN_MESSAGE);			
+					    JOptionPane.PLAIN_MESSAGE);		
 		}
 		else if (victoireCROIX) {
 			System.out.println();
